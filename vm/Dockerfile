@@ -45,11 +45,11 @@ RUN apt-get update && \
 RUN systemctl enable docker
 
 # the svamm-managed local image registry is plain HTTP and is reached inside sandboxes through
-# the msb-provided host alias  host.microsandbox.internal:<port>;
-# sandboxes may only reach the read-only proxy (pushes are refused with 405)
-ARG SVAMM_REGISTRY_PROXY_PORT=50001
-RUN mkdir -p /etc/docker && \
-	printf '{"insecure-registries":["host.microsandbox.internal:%s"]}\n' "$SVAMM_REGISTRY_PROXY_PORT" > /etc/docker/daemon.json
+# the msb-provided host alias host.microsandbox.internal:<port>;
+COPY render-daemon.sh /usr/local/bin/svamm-render-daemon.sh
+COPY svamm-daemon.service /etc/systemd/system/svamm-daemon.service
+RUN chmod +x /usr/local/bin/svamm-render-daemon.sh && \
+	systemctl enable svamm-daemon.service
 
 RUN groupadd -g 1000 agent
 RUN useradd -m -d /home/agent -s /usr/bin/zsh -u 1000 -g 1000 -G docker agent

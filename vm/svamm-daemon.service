@@ -1,0 +1,11 @@
+[Unit]
+Description=svamm docker daemon config
+Before=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/svamm-render-daemon.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
