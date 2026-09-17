@@ -1,9 +1,12 @@
-# building:
-# docker build -t 127.0.0.1:<registry_port>/dev:<tag> dev
-# docker push 127.0.0.1:<registry_port>/dev:<tag>
+# building (docker):
+# docker build -t 127.0.0.1:<registry_port>/intfish/dev:<tag> dev
+# docker push 127.0.0.1:<registry_port>/intfish/dev:<tag>
+#
+# building (svamm):
+# svm image build ./dev --name intfish/dev:latest
 #
 # ~/.config/svamm/config.toml:
-# images.vm = "127.0.0.1:<registry_port>/dev:<tag>"
+# images.vm = "127.0.0.1:<registry_port>/intfish/dev:<tag>"
 
 ARG SVAMM_BASE_IMAGE=ghcr.io/intfish/svamm-images/svamm:latest
 FROM ${SVAMM_BASE_IMAGE}
@@ -26,6 +29,7 @@ RUN apt-get update && \
 		postgresql-client \
 		python3-dev \
 		python3-pip \
+		unzip \
 	&& rm -rf /var/lib/apt/lists/*
 
 USER agent
