@@ -1,0 +1,13 @@
+[Unit]
+Description=svamm container dns
+After=network.target
+Before=docker.service
+
+[Service]
+Type=simple
+ExecStartPre=/usr/local/bin/svamm-render-dns.sh
+ExecStart=/usr/sbin/dnsmasq -k --conf-file=/etc/dnsmasq.d/svamm.conf
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
