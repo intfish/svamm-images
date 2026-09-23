@@ -70,13 +70,15 @@ RUN nix --extra-experimental-features 'nix-command flakes' profile add \
 RUN mkdir -p /home/agent/.local/bin
 ENV PATH="/home/agent/.local/bin:${PATH}"
 RUN npm config set prefix '~/.local/' && \
-	npm i -g pnpm opencode-ai
+	npm i -g pnpm @opencode/cli
 
 # creature comforts
 RUN mkdir -p /home/agent/.config/opencode/themes && \
-	mkdir -p /home/agent/.local/state/opencode && \
-	echo '{"theme":"svamm"}' > /home/agent/.local/state/opencode/kv.json
-COPY svamm.json /home/agent/.config/opencode/themes/svamm.json
+	mkdir -p /home/agent/.local/state/opencode
+COPY theme.json /home/agent/.config/opencode/themes/svamm.json
+COPY theme-v1.json /home/agent/.config/opencode/themes/svamm-v1.json
+COPY cli.json /home/agent/.config/opencode/cli.json
+
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 RUN cat <<EOT > "$HOME/.zshrc"
 export ZSH="\$HOME/.oh-my-zsh"
