@@ -10,5 +10,9 @@ if [ -z "$PORT" ]; then
 fi
 PORT="${PORT:-50001}"
 
+ALIAS="${SVAMM_HOST_ALIAS:-svamm.internal}"
+DNS="${SVAMM_CONTAINER_DNS:-172.17.0.1}"
+
 mkdir -p /etc/docker
-printf '{"insecure-registries":["host.microsandbox.internal:%s"]}\n' "$PORT" > /etc/docker/daemon.json
+printf '{"insecure-registries":["host.microsandbox.internal:%s","%s:%s"],"dns":["%s"]}\n' \
+	"$PORT" "$ALIAS" "$PORT" "$DNS" > /etc/docker/daemon.json

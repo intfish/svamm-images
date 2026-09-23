@@ -7,6 +7,7 @@ RUN apt-get update && \
 		bash \
 		ca-certificates \
 		curl \
+		dnsmasq \
 		git \
 		lld \
 		locales \
@@ -50,6 +51,13 @@ COPY render-daemon.sh /usr/local/bin/svamm-render-daemon.sh
 COPY svamm-daemon.service /etc/systemd/system/svamm-daemon.service
 RUN chmod +x /usr/local/bin/svamm-render-daemon.sh && \
 	systemctl enable svamm-daemon.service
+
+# guest-side dns resolver
+COPY render-dns.sh /usr/local/bin/svamm-render-dns.sh
+COPY svamm-dns.service /etc/systemd/system/svamm-dns.service
+RUN chmod +x /usr/local/bin/svamm-render-dns.sh && \
+	systemctl enable svamm-dns.service && \
+	systemctl mask dnsmasq.service
 
 RUN groupadd -g 1000 agent
 RUN useradd -m -d /home/agent -s /usr/bin/zsh -u 1000 -g 1000 -G docker agent
